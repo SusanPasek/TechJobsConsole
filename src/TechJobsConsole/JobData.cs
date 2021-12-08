@@ -42,6 +42,8 @@ namespace TechJobsConsole
         {
             // load data, if not already loaded
             LoadData();
+            //column choice is location, skill etc (not all)
+            //string value is search term
 
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
@@ -49,7 +51,7 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.ToLower().Contains(value.ToLower()))
                 {
                     jobs.Add(row);
                 }
@@ -58,6 +60,34 @@ namespace TechJobsConsole
             return jobs;
         }
 
+        public static List<Dictionary<string,string>> FindByValue(string value)
+            //value is search term
+            //jobs is the list of jobs matching our search 
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+            //loop is going through each job
+            foreach (Dictionary<string, string> row in AllJobs)  
+            {
+                //seeing if search term matches any of the columns in any of the jobs
+                //in current row(or job) we need to check through all the columns
+               foreach(KeyValuePair<string, string> column in row)
+                {
+                    //keys are column titles, values are the actual job data
+                    string columnValue = column.Value;
+                    if (columnValue.ToLower().Contains(value.ToLower()))
+                    {
+                        jobs.Add(row);
+                        break;
+                    }
+
+                }
+            }
+
+            return jobs;
+        }
+        
         /*
          * Load and parse data from job_data.csv
          */
